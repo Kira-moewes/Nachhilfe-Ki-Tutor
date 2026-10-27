@@ -26,10 +26,10 @@ function tutorOeffnen(ziel) {
   const verlauf = [];
   const d = el('dialog', null, { className: 'tutor' });
   const kopf = el('div', null, { className: 'tutor-kopf' });
-  kopf.append(el('b', '💬 Tutor'), el('span', ziel.titel ?? '', { className: 'klein' }),
+  kopf.append(el('b', '💬 KI-Tutor'), el('span', ziel.titel ?? '', { className: 'klein' }),
     el('button', '✕', { className: 'leise', type: 'button', title: 'Schließen', onclick: () => d.close() }));
   const log = el('div', null, { className: 'tutor-log' });
-  const info = el('div', 'Ich gebe dir Hinweise – rechnen tust du selbst. 😉 Schick mir deine Frage oder ein Foto von deinem Rechenweg.', { className: 'tutor-blase tutor' });
+  const info = el('div', 'Ich bin eine KI und gebe dir Hinweise – rechnen tust du selbst. 😉 Schick mir deine Frage oder ein Foto von deinem Rechenweg. Ich kann mich auch mal irren: Wenn dir etwas komisch vorkommt, frag Kira (🚩).', { className: 'tutor-blase tutor' });
   log.append(info);
 
   const form = el('form', null, { className: 'tutor-form' });

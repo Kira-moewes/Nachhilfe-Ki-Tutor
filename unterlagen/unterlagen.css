@@ -1,0 +1,35 @@
+@font-face{font-family:'Hanken Grotesk';src:url(../fonts/hanken-grotesk.woff2) format('woff2');font-weight:100 900}
+@font-face{font-family:'IBM Plex Mono';src:url(../fonts/ibm-plex-mono-500.woff2) format('woff2');font-weight:400 500}
+@page{size:A4;margin:10mm 14mm}
+*{box-sizing:border-box}
+body{font-family:'Hanken Grotesk',sans-serif;color:#383e4e;font-size:10pt;line-height:1.36;margin:0}
+h1{font-weight:290;text-transform:uppercase;font-size:21pt;line-height:1.05;margin:0 0 6px;color:#14171e}
+h2{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:8.5pt;letter-spacing:.16em;text-transform:uppercase;color:#6b7180;display:flex;align-items:center;gap:10px;margin:13px 0 6px}
+h2::after{content:"";flex:1;height:1px;background:rgba(56,62,78,.2)}
+p{margin:0 0 7px} ul{margin:0 0 6px;padding-left:16px} li{margin:2px 0} li::marker{color:#b6bac5}
+b{font-weight:600;color:#14171e}
+.unter{color:#6b7180;font-size:11pt;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{border:1px solid rgba(56,62,78,.2);background:#f7f9fb;padding:8px 11px}
+.pakete{display:grid;grid-template-columns:1fr 1.15fr 1fr;border:1px solid rgba(56,62,78,.25)}
+.paket{padding:10px 12px;border-right:1px solid rgba(56,62,78,.2)} .paket:last-child{border-right:0}
+.paket.haupt{background:#383e4e;color:#f7f9fb} .paket.haupt b,.paket.haupt .preis{color:#fff}
+.paket .name{font-family:'IBM Plex Mono',monospace;font-size:8pt;letter-spacing:.16em;text-transform:uppercase}
+.preis{font-weight:290;font-size:20pt;color:#14171e;line-height:1.1;margin:4px 0}
+.klein{font-size:9pt;color:#6b7180}
+.garantie{border-left:2px solid #383e4e;background:#f7f9fb;padding:9px 12px;margin:8px 0}
+.schritte{counter-reset:s;list-style:none;padding:0} .schritte li{counter-increment:s;padding-left:26px;position:relative;margin:5px 0}
+.schritte li::before{content:"0" counter(s);position:absolute;left:0;font-family:'IBM Plex Mono',monospace;font-size:8.5pt;color:#6b7180;top:2px}
+.seitenumbruch{break-before:page}
+table{width:100%;border-collapse:collapse;font-size:9.6pt} td,th{padding:5px 6px;border-bottom:1px solid rgba(56,62,78,.15);vertical-align:top;text-align:left}
+th{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:#6b7180}
+/* Ergänzungen KI-Tutor-Unterlagen */
+.luecke{background:#fff3c4;padding:0 3px}
+.kasten{display:inline-block;width:11px;height:11px;border:1px solid #383e4e;margin-right:6px;vertical-align:-1px}
+.wahl{border:1px solid rgba(56,62,78,.25);padding:8px 11px;margin:8px 0}
+.unterschrift{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:26px}
+.unterschrift div{border-top:1px solid #383e4e;padding-top:3px;font-size:8.5pt;color:#6b7180}
+.eng{font-size:8.4pt;line-height:1.28} .eng td,.eng th{padding:3px 4px}
+.eng h2{margin:8px 0 4px}
+ol.paragraphen{padding-left:0;list-style:none;counter-reset:p} ol.paragraphen>li{counter-increment:p;margin:0 0 6px}
+ol.paragraphen>li>b:first-child::before{content:"§ " counter(p) " "}

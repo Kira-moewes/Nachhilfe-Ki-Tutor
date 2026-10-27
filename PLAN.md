@@ -2,6 +2,12 @@
 
 Ziel: Schüler bekommen jeden Tag Hilfe, ohne dass Kira dauernd antworten muss – aber so, dass sie **selbst** rechnen (Hinweise statt Lösungen), Kira sieht, wo es hakt (Merkliste), und Eltern dem Datenschutz vertrauen können. Die bestehende App (`Kira-moewes/Nachhilfe-`) bleibt unverändert; dieses Repo liefert alles fertig zum späteren Einbinden (3 Zeilen in der App, erst nach Kiras Freigabe).
 
+## Entscheidungen (27.10.2026)
+- Anbieter: **Amazon Bedrock, Frankfurt** (eu-central-1).
+- Modell: **Claude Sonnet 5.5** als Standard. Opus ist für Kl. 5–10 nicht nötig; im Testmonat mit denselben Fragen gegen Opus/Haiku vergleichen (Testseite), bei schwacher Foto-Auswertung umstellen (`KI_MODELL`).
+- Inhalte speichern: **nur in der Testphase** (Kira, Max), 14 Tage. Eltern behalten trotzdem den Überblick: Monatsbericht mit Nutzung (Tage, Anzahl, Themen, 🚩), der Verlauf ist auf dem Gerät des Kindes sichtbar. Inhalte dauerhaft für Eltern zu speichern hieße mehr Daten über das Kind – bewusst nicht.
+- Tageslimit: **15 Nachrichten + 5 Fotos**, Monatsbudget 20 $.
+
 ## 1. Wichtiger Befund: „EU-Verarbeitung“
 
 Die Anthropic-API direkt kennt nur die Regionen „global“ und „us“ – **keine EU-Option**. Echte Verarbeitung in der EU gibt es nur über einen Cloud-Anbieter, der Claude in EU-Rechenzentren betreibt:
@@ -87,9 +93,9 @@ Modell ist eine Einstellung (`KI_MODELL`); im Testmonat lassen sich mehrere mit 
 
 ## 6. Reihenfolge
 
-1. Entscheidungen klären (Anbieter, Modell, Speichern von Inhalten, Limits) ← jetzt
-2. Wissensbasis + SQL + Edge Function + Tests
-3. Testseite + Chat-Fenster, Probefragen aus echten Lernpfad-Aufgaben
-4. Datenschutzinfo, Einwilligung, Verzeichnis (hängen am gewählten Anbieter)
-5. Honorarvereinbarung, Geschäftsplan
+1. ✓ Entscheidungen
+2. ✓ Wissensbasis + SQL + Edge Function + Tests
+3. ✓ Testseite + Chat-Fenster
+4. ✓ Datenschutzinfo, Einwilligung, Verzeichnis
+5. ✓ Honorarvereinbarung, Geschäftsplan
 6. Kira: Konto beim Anbieter anlegen, Schlüssel als Supabase-Secret, `tutor.sql` ausführen, Funktion bereitstellen, testen (November) → Einbau in die App erst nach Freigabe

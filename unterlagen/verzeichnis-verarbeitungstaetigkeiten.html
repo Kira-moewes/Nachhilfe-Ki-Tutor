@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Verzeichnis der Verarbeitungstätigkeiten</title>
+<link rel="stylesheet" href="unterlagen.css">
+<style>@page{margin:8mm 10mm} body{font-size:8.4pt} h1{font-size:15pt}</style></head><body class="eng">
+
+<h1>Verzeichnis der Verarbeitungstätigkeiten</h1>
+<p class="unter" style="font-size:9pt">Art. 30 DSGVO · Verantwortliche: Kira <span class="luecke">[Nachname]</span>, <span class="luecke">[Anschrift]</span>, kira.moewes@gmail.com · kein DSB nötig · Stand <span class="luecke">[Datum]</span></p>
+
+<table>
+<tr><th style="width:15%">Tätigkeit</th><th style="width:22%">Zweck · Rechtsgrundlage</th><th style="width:25%">Betroffene · Daten</th><th style="width:19%">Empfänger</th><th>Löschung</th></tr>
+<tr><td><b>1 Vertrag, Abrechnung</b></td><td>Nachhilfevertrag, Zahlungsübersicht, Buchhaltung · Art. 6 (1) b, c</td><td>Eltern, Schüler: Namen, E-Mail, Paket, Fächer, Minuten, Zahlungen</td><td>Supabase; Bank; Steuerberatung</td><td>Konto: 3 Mon. nach Ende; Belege 8 J., Bücher 10 J. (§ 147 AO)</td></tr>
+<tr><td><b>2 Online-Stunden</b></td><td>Unterricht · Art. 6 (1) b</td><td>Schüler, Helfer: Bild, Ton, Anzeigename</td><td>Microsoft (Teams)</td><td>keine Aufzeichnung</td></tr>
+<tr><td><b>3 Lern-App</b></td><td>Lernpfad, Arbeitsblätter, Klausurplaner, Noten, Merkliste · Art. 6 (1) b</td><td>Schüler: Benutzername, Klasse, Lernfortschritt, Lerntage, Klausuren, Noten, Merkliste</td><td>Supabase (Frankfurt), Cloudflare</td><td>3 Mon. nach Ende (Konto löschen → alles gelöscht)</td></tr>
+<tr><td><b>4 Termine, Push</b></td><td>Buchung, Minutenkonto, Erinnerung · Art. 6 (1) b</td><td>Schüler: Termine, Absagen, echte Minuten, Push-Adresse des Geräts</td><td>Supabase; Push-Dienst Apple/Google/Mozilla (verschlüsselt)</td><td>3 Mon. nach Ende; Push-Abo beim Abmelden</td></tr>
+<tr><td><b>5 Chat mit Kira</b></td><td>Fragen zwischen den Stunden · Art. 6 (1) b</td><td>Schüler: Nachrichten</td><td>Supabase</td><td>3 Mon. nach Ende</td></tr>
+<tr><td><b>6 KI-Tutor</b></td><td>Hinweise beim Üben · Art. 6 (1) a (Einwilligung Eltern)</td><td>Schüler: Frage, Foto Rechenweg, Thema, Klasse – <b>ohne Namen/ID</b>; Zähler, Kosten je Thema; Einwilligungsdatum</td><td>AWS EMEA (Bedrock, eu-central-1); Supabase</td><td>Foto nie gespeichert; Inhalte nur mit Häkchen 14 T.; Zähler 60 T.; Nutzung 13 Mon.; Einwilligung 3 J. nach Widerruf/Ende</td></tr>
+<tr><td><b>7 Eltern-kommunikation</b></td><td>Monatsbericht, Absprachen · Art. 6 (1) a (Bericht), b</td><td>Eltern: E-Mail, Bericht, Nachrichten</td><td>Google (E-Mail)</td><td>E-Mails 3 J. nach Ende (Verjährung), Steuerrelevantes länger</td></tr>
+<tr><td><b>8 Helfer</b></td><td>Honorarvertrag, Kinderschutz · Art. 6 (1) b, c; § 72a SGB VIII analog</td><td>Helfer: Kontakt, Bankverbindung, Honorar, Datum der Einsicht ins erweiterte Führungszeugnis (keine Kopie)</td><td>Bank; Steuerberatung</td><td>Vertrag/Belege 8–10 J.; Führungszeugnis-Vermerk bei Ende</td></tr>
+<tr><td><b>9 Sicherheits-protokolle</b></td><td>Angriffe/Fehler erkennen · Art. 6 (1) f</td><td>Alle Nutzer: IP, Zeitpunkt, Aufruf</td><td>Supabase, Cloudflare, AWS</td><td>nach Fristen der Anbieter (Tage–Wochen)</td></tr>
+</table>
+
+<h2>Auftragsverarbeiter und Drittland</h2>
+<p>Supabase Inc. (DPA in den AGB, Server Frankfurt) · Cloudflare Inc. (DPA) · Amazon Web Services EMEA SARL (AWS DPA über die Service Terms, Bedrock Frankfurt; Eingaben werden nicht zum Training genutzt und nicht an Anthropic weitergegeben). Microsoft/Google: AV-Vertrag nur bei Geschäftskonten (Microsoft 365 Business / Google Workspace) – <span class="luecke">[prüfen, welches Konto]</span>. US-Muttergesellschaften: EU-US Data Privacy Framework bzw. Standardvertragsklauseln. PDFs der Verträge im Ordner „Datenschutz“.</p>
+
+<h2>Technische und organisatorische Maßnahmen (Art. 32)</h2>
+<p><b>Zugriff:</b> Zeilen-Regeln in der Datenbank (jeder sieht nur Eigenes, Kira alles, Helfer später nur eigene Schüler) · Kinder mit Benutzernamen statt E-Mail · Lösungen nur für Kira · Dienst-Schlüssel nur in Supabase-Secrets. <b>Übertragung:</b> nur HTTPS · KI ohne Namen (Filter), Fotos ohne Metadaten, nicht gespeichert. <b>Konten Kiras:</b> starke Passwörter + Zwei-Faktor bei Supabase, AWS, Cloudflare, GitHub, Google, Microsoft. <b>Kosten/Missbrauch:</b> Tageslimit, Monatsbudget, AWS-Budgetwarnung. <b>Löschung:</b> nächtliche Aufräumjobs (pg_cron), Konto löschen entfernt alle Lerndaten. <b>Helfer:</b> Verschwiegenheit, Führungszeugnis, keine privaten Kanäle. <b>Pannen:</b> Meldung an die Aufsichtsbehörde binnen 72 h (Art. 33), Eltern bei hohem Risiko. <b>KI-Verordnung:</b> Tutor gibt nur Hinweise, bewertet nicht (kein Hochrisiko-System); Schüler sehen klar, dass sie mit einer KI schreiben (Art. 50); Kira kennt Grenzen und Fehlerquellen der KI (Art. 4).</p>
+</body></html>
