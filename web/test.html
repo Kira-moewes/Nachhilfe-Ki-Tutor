@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KI-Tutor Test</title>
+<link rel="stylesheet" href="tutor.css">
+<style>
+  :root { --frost: #f7f9fb; --ice-1: #e2e5eb; --slate: #383e4e; --ink: #14171e; --line: rgba(56,62,78,.18); --muted: #6b7180; --rot: #a63a2e; --gruen: #2f6b4a; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--frost); color: var(--ink); max-width: 760px; margin: 0 auto; padding: 16px; }
+  label { display: block; margin: 10px 0 4px; font-weight: 600; }
+  select, input, textarea { font: inherit; padding: 6px; width: 100%; box-sizing: border-box; }
+  button { font: inherit; padding: 7px 12px; border: 1px solid var(--slate); background: var(--slate); color: #fff; cursor: pointer; }
+  button.leise { background: transparent; color: var(--slate); border-color: var(--line); }
+  .klein { color: var(--muted); font-size: .9em; }
+  .vergleich { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 12px; }
+  .vergleich div { border: 1px solid var(--line); background: #fff; padding: 10px; white-space: pre-line; }
+</style>
+</head>
+<body>
+<h1>KI-Tutor – Testseite (nur Kira)</h1>
+<p class="klein">Lädt Themen und Aufgaben aus der App. Antworten werden für dich 14 Tage im Protokoll gespeichert (Tabelle tutor_protokoll).</p>
+
+<form id="login"><label>E-Mail</label><input name="email" type="email" required><label>Passwort</label><input name="pw" type="password" required>
+  <p><button>Einloggen</button> <span id="login-info" class="klein"></span></p></form>
+
+<div id="test" hidden>
+  <label>Thema</label><select id="thema"></select>
+  <label>Aufgabe</label><select id="aufgabe"><option value="">– allgemeine Frage zum Thema –</option></select>
+  <p><button type="button" id="chat">💬 Chat öffnen (wie Schüler)</button></p>
+  <label>Modelle vergleichen: gleiche Frage an alle drei</label>
+  <textarea id="frage" rows="3" placeholder="z. B. „Ich hab 22,5 raus, stimmt das?“ oder „Ich versteh nicht, wie ich anfangen soll“"></textarea>
+  <p><button type="button" id="vergleichen">Vergleichen</button> <span class="klein">Sonnet · Opus · Haiku, ohne Foto</span></p>
+  <div class="vergleich" id="ergebnisse"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+  const APP = 'https://nachhilfe.kira-moewes.workers.dev/';
+  const db = supabase.createClient('https://vzqguelcecnbptgoqcvj.supabase.co', 'sb_publishable_HKYawHfioFhquvQba4T5eg_0Q78f6Yh');
+  const $ = id => document.getElementById(id);
+  function el(tag, text, props = {}) { const e = document.createElement(tag); if (text != null) e.textContent = text; return Object.assign(e, props); }
+  let me = null;
+  const laden = src => new Promise((ok, nein) => document.head.append(el('script', null, { src, onload: ok, onerror: nein })));
+
+  $('login').onsubmit = async e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const { data, error } = await db.auth.signInWithPassword({ email: f.get('email'), password: f.get('pw') });
+    $('login-info').textContent = error ? 'Login fehlgeschlagen.' : '';
+    if (!error) start(data.user);
+  };
+  db.auth.getSession().then(({ data }) => data.session && start(data.session.user));
+
+  async function start(user) {
+    me = { id: user.id, admin: user.email === 'kira.moewes@gmail.com', spass: false };
+    $('login').hidden = true; $('test').hidden = false;
+    await laden(APP + 'lernpfad/themen.js');
+    for (const t of LERNTHEMEN) $('thema').append(el('option', `${t.titel} (${t.fach} ${t.klasse})`, { value: t.thema }));
+    $('thema').onchange = themaWaehlen; themaWaehlen();
+  }
+  async function themaWaehlen() {
+    const thema = $('thema').value;
+    if (!LERNPFAD[thema]) await laden(APP + `lernpfad/${thema}.js`);
+    $('aufgabe').replaceChildren(el('option', '– allgemeine Frage zum Thema –', { value: '' }));
+    for (const stufe of ['quiz1', 'aufgaben1', 'quiz2', 'aufgaben2', 'klausur'])
+      for (const a of LERNPFAD[thema][stufe]) $('aufgabe').append(el('option', `${stufe} · ${a.teil} · ${a.frage.slice(0, 90)}`, { value: JSON.stringify([stufe, a.frage]) }));
+  }
+  const ziel = () => {
+    const [stufe, aufgabe] = $('aufgabe').value ? JSON.parse($('aufgabe').value) : [undefined, undefined];
+    return { thema: $('thema').value, titel: $('thema').selectedOptions[0].textContent, stufe, aufgabe };
+  };
+  $('chat').onclick = () => tutorOeffnen(ziel());
+  $('vergleichen').onclick = async () => {
+    const z = ziel(), nachricht = $('frage').value.trim();
+    if (!nachricht) return;
+    $('ergebnisse').replaceChildren();
+    await Promise.all(['claude-sonnet-5-5', 'claude-opus-5-5', 'claude-haiku-5-5'].map(async modell => {
+      const box = el('div', `${modell}\n…`); $('ergebnisse').append(box);
+      const { data, error } = await db.functions.invoke('tutor', { body: { ...z, nachricht, modell }, region: TUTOR_REGION });
+      const r = error ? await error.context?.json?.().catch(() => null) : data;
+      box.textContent = `${modell} · ${r?.usd != null ? (r.usd * 100).toFixed(2) + ' US-Cent' : ''}\n\n${r?.antwort ?? r?.fehler ?? 'Fehler'}`;
+    }));
+  };
+</script>
+<script src="tutor.js"></script>
+</body>
+</html>

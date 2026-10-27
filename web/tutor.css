@@ -1,0 +1,18 @@
+/* KI-Tutor-Fenster – nutzt die Farben der App (--slate, --line, --frost …), mit Ersatzwerten für die Testseite. */
+dialog.tutor { width: min(560px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 0; border: 1px solid var(--line, #ccc);
+  border-radius: 0; background: var(--frost, #f7f9fb); color: var(--ink, #14171e); display: flex; flex-direction: column; }
+dialog.tutor:not([open]) { display: none; }
+dialog.tutor::backdrop { background: rgba(20, 23, 30, .35); }
+.tutor-kopf { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--line, #ccc); }
+.tutor-kopf .klein { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tutor-log { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-height: 200px; }
+.tutor-blase { max-width: 88%; padding: 8px 11px; white-space: pre-line; line-height: 1.45; border: 1px solid var(--line, #ccc); }
+.tutor-blase.tutor { align-self: flex-start; background: #fff; }
+.tutor-blase.kind { align-self: flex-end; background: var(--ice-1, #e2e5eb); }
+.tutor-blase.warte { color: var(--muted, #6b7180); animation: tutor-puls 1.2s infinite; }
+.tutor-blase.fehler { color: var(--rot, #a63a2e); }
+@keyframes tutor-puls { 50% { opacity: .4; } }
+.tutor-form { padding: 10px 12px; border-top: 1px solid var(--line, #ccc); display: flex; flex-direction: column; gap: 6px; }
+.tutor-zeile { display: flex; gap: 6px; align-items: stretch; }
+.tutor-zeile textarea { flex: 1; min-width: 0; font: inherit; padding: 6px 8px; resize: vertical; }
+.tutor-knopf { margin-top: 8px; }
