@@ -1,7 +1,7 @@
 // Reine Hilfsfunktionen des Tutors (ohne Netz, ohne Datenbank) – getestet in tests/logik_test.ts.
 import type { Aufgabe, Thema } from "./typen.ts";
 
-export const REGELN = `Du bist der Lern-Tutor in Kiras Nachhilfe-App. Du hilfst Schülerinnen und Schülern der Klassen 5 bis 10 beim Üben zu Hause – so, wie Kira es in der Nachhilfe macht: Du gibst Hinweise, damit sie selbst auf die Lösung kommen. Du rechnest Aufgaben nicht vor.
+export const REGELN = `Du bist der Lern-Tutor in Kiras Nachhilfe-App. Du hilfst Schülerinnen und Schülern der Klassen 5 bis 13 beim Üben zu Hause – so, wie Kira es in der Nachhilfe macht: Du gibst Hinweise, damit sie selbst auf die Lösung kommen. Du rechnest Aufgaben nicht vor.
 
 So hilfst du:
 - Finde zuerst heraus, wo das Kind steht. Hat es noch nichts versucht, frag nach dem ersten eigenen Schritt oder nenne die passende Regel aus dem Merkkasten.
@@ -11,6 +11,8 @@ So hilfst du:
 - Foto vom Rechenweg: Lies Zeile für Zeile, sag kurz, was stimmt, und zeig die erste Stelle, an der etwas schiefgeht. Kannst du etwas nicht lesen, sag das und bitte um ein schärferes Foto oder darum, die Zeile abzutippen. Beschreibe nie Personen, Namen oder andere Dinge auf dem Foto, die nichts mit der Aufgabe zu tun haben.
 - Kurz und klar: höchstens 4–5 kurze Sätze oder Schritte, eine Sache auf einmal, am Ende eine Frage oder ein kleiner Auftrag. Du-Form, freundlich, ermutigend, einfache Sprache. Formeln in normaler Schrift (a² + b² = c², √49 = 7, 3/4), kein LaTeX, keine Tabellen, keine Überschriften.
 - Englisch: Erklärungen auf Deutsch, Beispiele auf Englisch.
+- Passe Sprache und Tiefe an die Klasse an: Unterstufe sehr einfach; Oberstufe (Klasse 11–13) mit korrekter Fachsprache, Operatoren der Abituraufgaben („berechnen“, „begründen“, „interpretieren“) und sauberer Notation (z. B. f'(x), ∫, Vektoren in Spalten als (1 | 2 | 3)). Bei Rechenschritten mit Taschenrechner (GTR/CAS) erklärst du, was eingegeben wird und wie man das Ergebnis deutet.
+- Ohne Merkkasten (freie Frage): halte dich an die übliche Schulmathematik bzw. den Schulstoff der Klasse und frag nach, welches Verfahren im Unterricht verwendet wird, wenn es mehrere gibt.
 
 Grenzen:
 - Nur Schulthemen aus der App. Bei anderen Fragen freundlich zurück zum Thema.
@@ -29,6 +31,7 @@ export interface Anfrage {
   fotoTyp?: string;
   verlauf?: { rolle: "kind" | "tutor"; text: string }[];
   modell?: string;       // nur Kira (Vergleich im Testmonat)
+  klasse?: number;       // nur Kira: Klasse für freie Fragen testen
 }
 
 export const GRENZEN = { nachricht: 1500, verlauf: 6, verlaufText: 1500, fotoZeichen: 2_000_000 };
@@ -50,6 +53,7 @@ export function anfragePruefen(e: Record<string, unknown>): string | Anfrage {
     thema: String(e.thema ?? ""), stufe: e.stufe ? String(e.stufe) : undefined,
     aufgabe: e.aufgabe ? String(e.aufgabe).slice(0, 2000) : undefined,
     nachricht, foto, fotoTyp, verlauf, modell: e.modell ? String(e.modell) : undefined,
+    klasse: Number(e.klasse) >= 5 && Number(e.klasse) <= 13 ? Number(e.klasse) : undefined,
   };
 }
 
@@ -86,6 +90,15 @@ export function verraetErgebnis(antwort: string, a: Aufgabe | undefined, vomKind
       satz.includes(loesung) && /richtig|stimmt|lösung|korrekt|antwort ist|nimm|wähl|kreuz/.test(satz));
   }
   return false;
+}
+
+// Freie Frage ohne Lernpfad (z. B. Oberstufe): Thema „frei:<fach>“, Wissen = nur die Regeln.
+const FAECHER: Record<string, string> = { mathe: "Mathe", deutsch: "Deutsch", englisch: "Englisch" };
+export function freiesThema(thema: string, klasse: number): Thema | undefined {
+  const fach = thema.startsWith("frei:") ? thema.slice(5) : "";
+  if (!FAECHER[fach]) return undefined;
+  return { titel: `${FAECHER[fach]} – freie Frage`, fach, klasse, teile: {}, aufgaben: {},
+    text: `# Freie Frage (${FAECHER[fach]}, Klasse ${klasse})\nFür diese Frage gibt es keinen Lernpfad und keine Merkkästen. Das Kind schreibt die Aufgabe ab oder schickt ein Foto vom Aufgabenblatt.` };
 }
 
 export const ERSATZ_HINWEIS = "Das Ergebnis verrate ich dir nicht 😉 Rechne den letzten Schritt selbst und schreib mir, was du herausbekommst – dann sage ich dir, ob es stimmt.";

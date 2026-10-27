@@ -26,6 +26,7 @@
 
 <div id="test" hidden>
   <label>Thema</label><select id="thema"></select>
+  <label>Klasse (nur für freie Fragen)</label><select id="klasse"></select>
   <label>Aufgabe</label><select id="aufgabe"><option value="">– allgemeine Frage zum Thema –</option></select>
   <p><button type="button" id="chat">💬 Chat öffnen (wie Schüler)</button></p>
   <label>Modelle vergleichen: gleiche Frage an alle drei</label>
@@ -56,11 +57,15 @@
     me = { id: user.id, admin: user.email === 'kira.moewes@gmail.com', spass: false };
     $('login').hidden = true; $('test').hidden = false;
     await laden(APP + 'lernpfad/themen.js');
+    for (const f of ['mathe', 'deutsch', 'englisch']) $('thema').append(el('option', `Freie Frage ${f} (ohne Lernpfad, z. B. Oberstufe)`, { value: 'frei:' + f }));
     for (const t of LERNTHEMEN) $('thema').append(el('option', `${t.titel} (${t.fach} ${t.klasse})`, { value: t.thema }));
+    for (let k = 5; k <= 13; k++) $('klasse').append(el('option', `Klasse ${k}`, { value: k, selected: k === 12 }));
     $('thema').onchange = themaWaehlen; themaWaehlen();
   }
   async function themaWaehlen() {
     const thema = $('thema').value;
+    $('aufgabe').replaceChildren(el('option', '– allgemeine Frage zum Thema –', { value: '' }));
+    if (thema.startsWith('frei:')) return;
     if (!LERNPFAD[thema]) await laden(APP + `lernpfad/${thema}.js`);
     $('aufgabe').replaceChildren(el('option', '– allgemeine Frage zum Thema –', { value: '' }));
     for (const stufe of ['quiz1', 'aufgaben1', 'quiz2', 'aufgaben2', 'klausur'])
@@ -68,7 +73,7 @@
   }
   const ziel = () => {
     const [stufe, aufgabe] = $('aufgabe').value ? JSON.parse($('aufgabe').value) : [undefined, undefined];
-    return { thema: $('thema').value, titel: $('thema').selectedOptions[0].textContent, stufe, aufgabe };
+    return { thema: $('thema').value, titel: $('thema').selectedOptions[0].textContent, stufe, aufgabe, klasse: +$('klasse').value };
   };
   $('chat').onclick = () => tutorOeffnen(ziel());
   $('vergleichen').onclick = async () => {

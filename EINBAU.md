@@ -39,5 +39,7 @@ Ab Januar `inhalte_speichern = false` (Standard). Widerruf: `update tutor_zugang
      titel: `${LERNTHEMEN.find(t => t.thema === lernThema)?.titel ?? ''} · ${teil?.titel ?? ''}` }));
    ```
    (Knopf erscheint nur bei freigeschalteten Schülern; die Funktion lehnt die Probeklausur zusätzlich selbst ab.)
-3. Wissensbasis aktuell halten: nach neuen Lernpfad-Themen `python3 wissen/erzeugen.py ../Nachhilfe-` und Funktion neu bereitstellen.
-4. Elternbericht: Nutzung aus der Ansicht `tutor_nutzung` (Tage, Nachrichten, Themen – keine Inhalte).
+3. Oberstufe / Klassen ohne Lernpfad: in `js/lernen.js` dort, wo „kommt der Lernpfad bald“ steht, darunter je Fach
+   `box.append(...me.faecher.map(tutorFreiKnopf));` – freie Fragen mit Foto vom Aufgabenblatt (ohne Merkkästen, ohne Ergebnis-Wächter).
+4. Wissensbasis aktuell halten: nach neuen Lernpfad-Themen `python3 wissen/erzeugen.py ../Nachhilfe-` und Funktion neu bereitstellen.
+5. Elternbericht: Nutzung aus der Ansicht `tutor_nutzung` (Tage, Nachrichten, Themen – keine Inhalte).

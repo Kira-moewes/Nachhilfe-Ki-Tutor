@@ -7,6 +7,7 @@ Ziel: Schüler bekommen jeden Tag Hilfe, ohne dass Kira dauernd antworten muss �
 - Modell: **Claude Sonnet 5.5** als Standard. Opus ist für Kl. 5–10 nicht nötig; im Testmonat mit denselben Fragen gegen Opus/Haiku vergleichen (Testseite), bei schwacher Foto-Auswertung umstellen (`KI_MODELL`).
 - Inhalte speichern: **nur in der Testphase** (Kira, Max), 14 Tage. Eltern behalten trotzdem den Überblick: Monatsbericht mit Nutzung (Tage, Anzahl, Themen, 🚩), der Verlauf ist auf dem Gerät des Kindes sichtbar. Inhalte dauerhaft für Eltern zu speichern hieße mehr Daten über das Kind – bewusst nicht.
 - Tageslimit: **15 Nachrichten + 5 Fotos**, Monatsbudget 20 $.
+- Klasse 11–13: es gibt noch keine Lernpfade → Modus **freie Frage** (`thema: "frei:mathe"` usw.) mit Foto vom Aufgabenblatt, Oberstufen-Sprache, ohne Merkkästen und ohne Ergebnis-Wächter (kein bekanntes Ergebnis). Sobald Oberstufen-Lernpfade in der App sind, greift automatisch der volle Modus. Einwilligung: ab 16 Eltern + Schüler, ab 18 Schüler allein (auch für den Bericht an die Eltern).
 
 ## 1. Wichtiger Befund: „EU-Verarbeitung“
 

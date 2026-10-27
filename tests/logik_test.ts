@@ -1,6 +1,6 @@
 // Aufruf: deno test tests/   (prüft Namensfilter, Ergebnis-Wächter, Eingaben und Wissensbasis)
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { anfragePruefen, kosten, namenEntfernen, verraetErgebnis } from "../supabase/functions/tutor/logik.ts";
+import { anfragePruefen, freiesThema, kosten, namenEntfernen, verraetErgebnis } from "../supabase/functions/tutor/logik.ts";
 import { WISSEN } from "../supabase/functions/tutor/wissen.ts";
 
 Deno.test("Namen werden entfernt, andere Wörter bleiben", () => {
@@ -56,4 +56,10 @@ Deno.test("Wissensbasis: jedes Thema hat Merkkästen und Aufgaben mit Ergebnis",
 Deno.test("Kosten: Sonnet mit Cache", () => {
   const usd = kosten("anthropic.claude-sonnet-5-5", { input_tokens: 1500, output_tokens: 600, cache_read_input_tokens: 6000 });
   assert(Math.abs(usd - (1500 * 2 + 600 * 10 + 6000 * 0.2) / 1e6) < 1e-9);
+});
+
+Deno.test("Freie Frage (Oberstufe): nur bekannte Fächer, Klasse aus dem Profil", () => {
+  assertEquals(freiesThema("frei:mathe", 12)?.klasse, 12);
+  assertEquals(freiesThema("frei:physik", 12), undefined);
+  assertEquals(freiesThema("1-wurzeln", 9), undefined);
 });

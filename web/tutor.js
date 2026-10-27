@@ -22,6 +22,14 @@ function tutorKnopf(ziel) {
   return b;
 }
 
+// Freie Frage ohne Lernpfad, z. B. für die Oberstufe oder Hausaufgaben außerhalb der Lernpfade (Tab Lernen).
+function tutorFreiKnopf(fach) {
+  const name = { mathe: 'Mathe', deutsch: 'Deutsch', englisch: 'Englisch' }[fach] ?? fach;
+  const b = tutorKnopf({ thema: 'frei:' + fach, titel: `${name} – freie Frage` });
+  b.textContent = `💬 KI-Tutor ${name}: Aufgabe abschreiben oder fotografieren`;
+  return b;
+}
+
 function tutorOeffnen(ziel) {
   const verlauf = [];
   const d = el('dialog', null, { className: 'tutor' });
@@ -56,7 +64,7 @@ function tutorOeffnen(ziel) {
     const warte = el('div', '…', { className: 'tutor-blase tutor warte' });
     log.append(blase, warte); log.scrollTop = log.scrollHeight;
     try {
-      const body = { thema: ziel.thema, stufe: ziel.stufe, aufgabe: ziel.aufgabe, nachricht, verlauf: verlauf.slice(-6) };
+      const body = { thema: ziel.thema, stufe: ziel.stufe, aufgabe: ziel.aufgabe, klasse: ziel.klasse, nachricht, verlauf: verlauf.slice(-6) };
       if (datei) Object.assign(body, { foto: await fotoVerkleinern(datei), fotoTyp: 'image/jpeg' });
       const { data, error } = await db.functions.invoke('tutor', { body, region: TUTOR_REGION });
       const r = error ? await error.context?.json?.().catch(() => null) : data;

@@ -1,6 +1,7 @@
 // KI-Tutor: Hinweise statt Lösungen, auf Basis von Kiras Merkkästen und Lösungswegen (wissen.ts).
 // Aufruf aus der App mit dem Login des Schülers, Region fest eu-central-1:
 //   db.functions.invoke("tutor", { body: { thema, stufe?, aufgabe?, nachricht, foto?, fotoTyp?, verlauf? }, region: "eu-central-1" })
+//   thema = Lernpfad-Thema (z. B. "1-wurzeln") oder "frei:mathe" / "frei:deutsch" / "frei:englisch" für Fragen ohne Lernpfad (z. B. Oberstufe)
 //   → { antwort, rest: { nachrichten, fotos } }  bzw. { fehler }
 // An die KI gehen nur Thema, Aufgabe, Klasse, Text und Foto – kein Name, keine Nutzer-ID, keine E-Mail.
 // Einstellungen (Supabase → Edge Functions → Secrets):
@@ -15,7 +16,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import Anthropic, { betaRefusalFallbackMiddleware } from "npm:@anthropic-ai/sdk@1.3.0";
 import { AnthropicBedrockMantle } from "npm:@anthropic-ai/bedrock-sdk@1.1.0";
 import { WISSEN } from "./wissen.ts";
-import { anfragePruefen, ERSATZ_HINWEIS, kontext, kosten, namenEntfernen, REGELN, verraetErgebnis } from "./logik.ts";
+import { anfragePruefen, ERSATZ_HINWEIS, freiesThema, kontext, kosten, namenEntfernen, REGELN, verraetErgebnis } from "./logik.ts";
 
 const KIRA = "kira.moewes@gmail.com";
 const MODELLE = ["claude-sonnet-5-5", "claude-opus-5-5", "claude-haiku-5-5"];
@@ -40,12 +41,11 @@ Deno.serve(async (req) => {
 
   const e = anfragePruefen(await req.json().catch(() => ({})));
   if (typeof e === "string") return antwort({ fehler: e }, 400);
-  const th = WISSEN[e.thema];
+  const { data: profil } = await admin.from("profiles").select("name, klasse, faecher, freigegeben, spass").eq("id", user.id).single();
+  const th = WISSEN[e.thema] ?? freiesThema(e.thema, (istKira && e.klasse) || profil?.klasse || 9);
   if (!th) return antwort({ fehler: "Zu diesem Thema kann ich (noch) nicht helfen." }, 400);
   const aufgabe = e.aufgabe ? th.aufgaben[e.aufgabe] : undefined;
   if (e.stufe === "klausur" || aufgabe?.klausur) return antwort({ fehler: "In der Probeklausur bist du auf dich gestellt – du schaffst das! 💪" }, 403);
-
-  const { data: profil } = await admin.from("profiles").select("name, klasse, faecher, freigegeben, spass").eq("id", user.id).single();
   const { data: zugang } = await admin.from("tutor_zugang").select("*").eq("user_id", user.id).maybeSingle();
   if (!istKira) {
     if (!profil?.freigegeben || !zugang?.aktiv || !zugang.einwilligung_am) return antwort({ fehler: "Der KI-Tutor ist für dich noch nicht freigeschaltet." }, 403);
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     max_tokens: 4000,
     output_config: { effort: env("KI_AUFWAND", "medium") as "medium" },
     // Regeln + Themenwissen sind für alle Fragen zum Thema gleich → zwischengespeichert (10 % des Preises beim Lesen).
-    system: [{ type: "text", text: REGELN }, { type: "text", text: th.text, cache_control: { type: "ephemeral" } }],
+    system: [{ type: "text", text: REGELN }, { type: "text", text: th.text, cache_control: { type: "ephemeral" } }],  // freie Frage: zu kurz für den Cache, kostet dann etwas mehr
     messages: msgs,
   });
 

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>Checkliste Test, Start und Schule</title>
+<link rel="stylesheet" href="unterlagen.css"><style>li{margin:3px 0}</style></head><body>
+
+<h1>Checkliste</h1>
+<p class="unter">Erst testen → dann legal starten → dann der Schule zeigen. Abhaken von oben nach unten.</p>
+
+<h2>A · Tutor testen (nur Kira, November)</h2>
+<ul class="klein" style="color:#383e4e;font-size:9.6pt">
+  <li><span class="kasten"></span><b>Nur erfundene oder abgetippte Aufgaben</b>, keine Namen, keine Fotos von Schülerheften → im Test werden keine Schülerdaten verarbeitet, es braucht noch keine Einwilligung.</li>
+  <li><span class="kasten"></span>KI-Zugang anlegen: <b>schnell</b> Anthropic-Konto (console.anthropic.com, API-Schlüssel, Ausgabenlimit 20 $) – nur für den Test, nicht EU; <b>oder gleich</b> AWS Bedrock Frankfurt (EINBAU.md, Schritt 1). Vor dem ersten echten Schüler auf jeden Fall Bedrock.</li>
+  <li><span class="kasten"></span><code>sql/tutor.sql</code> ausführen, Schlüssel als Secret eintragen, Funktion „tutor“ bereitstellen (macht Claude).</li>
+  <li><span class="kasten"></span>Testseite: 50 Fragen aus allen Klassen (5, 9, 10, Oberstufe „freie Frage“), je Modell vergleichen. Prüfen: verrät er Ergebnisse? Erkennt er Fehler im Foto? Passt die Sprache? Bleibt er beim Thema? Reagiert er richtig auf „Mir geht’s schlecht“?</li>
+  <li><span class="kasten"></span>Entscheiden: Modell, Limits, Monatsbudget. Was schiefging, an Claude geben (Regeln nachschärfen).</li>
+</ul>
+
+<h2>B · Legal starten (bevor Schüler den Tutor bekommen)</h2>
+<p><b>Steuer und Versicherung</b></p>
+<ul>
+  <li><span class="kasten"></span>Finanzamt: „Fragebogen zur steuerlichen Erfassung“ (ELSTER), freiberufliche Nachhilfe, Kleinunternehmerregelung. Klären: ist die App (v. a. „App allein“) gewerblich?</li>
+  <li><span class="kasten"></span>Deutsche Rentenversicherung: Rentenversicherungspflicht als selbstständige Lehrkraft prüfen lassen.</li>
+  <li><span class="kasten"></span>Berufshaftpflicht abschließen.</li>
+</ul>
+<p><b>Verträge mit den Familien</b></p>
+<ul>
+  <li><span class="kasten"></span>Schriftliche Vertragsbedingungen für die Pakete (Preis, Minuten, Absage 24 h, Kündigung, Testmonat, Zahlung).</li>
+  <li><span class="kasten"></span><b>Widerrufsbelehrung</b>: Verträge per E-Mail/App mit Verbrauchern sind Fernabsatz → 14 Tage Widerrufsrecht. Belehrung + Muster-Formular mitschicken; sonst verlängert sich die Frist auf 12 Monate. Start vor Fristende nur auf ausdrücklichen Wunsch.</li>
+</ul>
+<p><b>Datenschutz</b></p>
+<ul>
+  <li><span class="kasten"></span>AV-Verträge als PDF in den Ordner „Datenschutz“: Supabase, Cloudflare, AWS. Teams + E-Mail: Geschäftskonto (Microsoft 365 Business / Google Workspace) oder anderen Weg wählen.</li>
+  <li><span class="kasten"></span>Zwei-Faktor-Anmeldung bei Supabase, AWS, Cloudflare, GitHub, Google, Microsoft.</li>
+  <li><span class="kasten"></span>Supabase Pro (tägliche Sicherung), sobald echte Lerndaten wichtig werden.</li>
+  <li><span class="kasten"></span>Lücken (gelb) in Datenschutzinfo, Einwilligung, Verzeichnis füllen; von der Beratung gegenlesen lassen.</li>
+  <li><span class="kasten"></span>Datenschutzinfo + Einwilligung an die Familien (ab 16 unterschreibt der Schüler mit, ab 18 allein); unterschriebene Bögen ablegen, Datum in <code>tutor_zugang</code> eintragen → erst dann freischalten.</li>
+</ul>
+<p><b>App</b></p>
+<ul>
+  <li><span class="kasten"></span>Impressum (§ 5 DDG) und Link zur Datenschutzinfo auf der Login-Seite (Claude baut das ein).</li>
+  <li><span class="kasten"></span>KI-Kennzeichnung im Chat („Ich bin eine KI“) – erledigt. Arbeitsblätter: nur eigene oder gemeinfreie Texte – erledigt.</li>
+</ul>
+
+<h2>C · Der Schule zeigen (März)</h2>
+<ul>
+  <li><span class="kasten"></span>Ansprechpartner: Leitung der Schülernachhilfe; Kooperation oder Werbung an der Schule braucht in der Regel die <b>Zustimmung der Schulleitung</b>.</li>
+  <li><span class="kasten"></span><b>Nur ein Vorführ-Konto mit erfundenem Schüler</b> zeigen (Vorschau-Konto, Fantasiename, Beispieldaten) – niemals echte Schüler, Noten oder Chats. Kira hält das Gerät, die Schule bekommt keine Zugänge.</li>
+  <li><span class="kasten"></span>Mitbringen: 1-seitiges Angebot (Schulpaket), Datenschutz auf einer Seite, anonyme Referenzmappe (Elternzitate nur mit Erlaubnis).</li>
+  <li><span class="kasten"></span>Kooperationsvereinbarung (Entwurf von Claude): Schule empfiehlt nur; Vertrag, Daten und App bleiben bei Kira; keine Schülerdaten an die Schule, kein Geld an die Schule. Will die Schule selbst Vertragspartner werden oder Daten sehen → AV-Vertrag und Datenschutzbeauftragter der Schule nötig, besser vermeiden.</li>
+  <li><span class="kasten"></span>Nachhilfekräfte aus der Schülernachhilfe: Honorarvereinbarung, erweitertes Führungszeugnis, bei Minderjährigen Unterschrift der Eltern; Rolle „Nachhilfekraft“ in der App vorher bauen lassen.</li>
+</ul>
+<p class="klein">Keine Rechtsberatung – Punkte B und C vor dem Start mit IHK-Gründungsberatung bzw. Steuerberatung durchgehen (Fahrplan Dezember).</p>
+</body></html>
